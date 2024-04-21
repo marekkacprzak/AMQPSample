@@ -5,10 +5,16 @@ using ServiceContract;
 
 namespace Infrastructure.Service;
 
+
 internal class RabbitMqConsumer(IRabbitMqConnection connection) : IRabbitMqConsumer, IQueueConsumer
 { 
     private string? _queueName;
-    public event EventHandler<string?>? Received;
+    public event EventHandler<RabbitMQMessage?>? Received;
+
+    public void Acknowladge(ulong deliveryTag)
+    {
+        connection.GetChannel().BasicAck(deliveryTag,false);
+    }
 
     void IQueueConsumer.SetupConsumer()
     {
@@ -16,11 +22,15 @@ internal class RabbitMqConsumer(IRabbitMqConnection connection) : IRabbitMqConsu
         consumer.Received += (model, ea) =>
         {
             var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-            Received?.Invoke(this, message);
+            var rabbitMQMessage = new RabbitMQMessage
+            {
+                Message = Encoding.UTF8.GetString(body),
+                DeliveryTag = ea.DeliveryTag
+            };
+            Received?.Invoke(this, rabbitMQMessage);
         };
         connection.GetChannel().BasicConsume(queue: _queueName,
-            autoAck: true,
+            autoAck: false,
             consumer: consumer);
     }
 

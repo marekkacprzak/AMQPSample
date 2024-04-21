@@ -5,12 +5,13 @@ var quit="";
 var counter=0;
 while (quit?.ToLower()!="q")
 {
-    sender.Send($"Hello World! Typed: {quit}");
+    sender.Send($"{counter}");
     await Task.Delay(1000);
-    Console.WriteLine(" [x] Sent 'Hello World! Type q to quit.");
-    quit = Console.ReadLine();
-    if (counter>1000)
+    Console.WriteLine($" [x] Sent '{counter}! Type q to quit.");
+    //quit = Console.ReadLine();
+    if (counter>=10)
     {
         break;
     }
+    counter++;
 }

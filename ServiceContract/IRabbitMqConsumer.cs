@@ -2,5 +2,6 @@
 
 public interface IRabbitMqConsumer
 {
-    event EventHandler<string?> Received;
+    event EventHandler<RabbitMQMessage?> Received;
+    void Acknowladge(ulong deliveryTag);
 }

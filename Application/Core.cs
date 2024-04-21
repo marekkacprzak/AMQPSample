@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,8 +12,12 @@ public class Core : IDisposable
 
     private static ServiceProvider ServiceProviderBuild()
     {
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
+            .SetBasePath(AppContext.BaseDirectory)
+           // .AddJsonFile("appsettings.json")
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
             .Build();
 
         return new ServiceCollection()
