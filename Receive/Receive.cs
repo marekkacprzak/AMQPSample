@@ -7,4 +7,5 @@ consumer.Received += (sender, message) =>
     Console.WriteLine($"[x] Received {counter++} {message}");
 };
 Console.WriteLine("Press [enter] to exit.");
+await Task.Delay(30000);
 Console.ReadLine();
