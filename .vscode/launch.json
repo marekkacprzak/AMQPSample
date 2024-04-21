@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Receive",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/Receive/bin/Debug/net8.0/Receive.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/Receive",
+            "stopAtEntry": false,
+            "env": {
+              "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+          },
+          {
+            "name": ".NET Core Send",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/Send/bin/Debug/net8.0/Send.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/Send",
+            "stopAtEntry": false,
+            "env": {
+              "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+          }
+    ],
+    "compounds": [
+        {
+          "name": "Receive & Send",
+          "configurations": [
+            ".NET Core Receive",
+            ".NET Core Send"
+          ],
+          "stopAll": true
+        }
+    ]
+}

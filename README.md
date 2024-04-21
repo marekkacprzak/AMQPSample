@@ -1,0 +1,1 @@
+# AMQP Consumer Sender sample Console Application
