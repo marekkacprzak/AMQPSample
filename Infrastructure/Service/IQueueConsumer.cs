@@ -3,5 +3,4 @@
 internal interface IQueueConsumer
 {
     void SetQueue(string queueName);
-    void SetupConsumer();
 }

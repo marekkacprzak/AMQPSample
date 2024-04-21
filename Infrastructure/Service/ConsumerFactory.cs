@@ -7,7 +7,6 @@ internal class ConsumerFactory(IRabbitMqConnection connection, IRabbitMqConsumer
 {
     public IRabbitMqConsumer CreateQueue(string queueName)
     {
-        
         connection.GetChannel()
             .QueueDeclare(queue: queueName,
                 durable: true,
@@ -16,7 +15,6 @@ internal class ConsumerFactory(IRabbitMqConnection connection, IRabbitMqConsumer
                 arguments: null);
         var queueReciver = consumer as IQueueConsumer;
         queueReciver?.SetQueue(queueName);
-        queueReciver?.SetupConsumer();
         return consumer;
     }
 }

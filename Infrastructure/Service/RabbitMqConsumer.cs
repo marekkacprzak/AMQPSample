@@ -9,15 +9,24 @@ namespace Infrastructure.Service;
 internal class RabbitMqConsumer(IRabbitMqConnection connection) : IRabbitMqConsumer, IQueueConsumer
 { 
     private string? _queueName;
-    public event EventHandler<RabbitMQMessage?>? Received;
+    public event EventHandler<RabbitMQMessage>? Received;
 
     public void Acknowladge(ulong deliveryTag)
     {
         connection.GetChannel().BasicAck(deliveryTag,false);
     }
 
-    void IQueueConsumer.SetupConsumer()
+    public void Reject(ulong deliveryTag)
     {
+        connection.GetChannel().BasicReject(deliveryTag, true);
+    }
+
+    public void StartConsuming()
+    {
+        if (Received==null)
+        {
+            throw new ArgumentException("Consuming event handler not set.");
+        }
         var consumer = new EventingBasicConsumer(connection.GetChannel());
         consumer.Received += (model, ea) =>
         {
@@ -27,7 +36,7 @@ internal class RabbitMqConsumer(IRabbitMqConnection connection) : IRabbitMqConsu
                 Message = Encoding.UTF8.GetString(body),
                 DeliveryTag = ea.DeliveryTag
             };
-            Received?.Invoke(this, rabbitMQMessage);
+            Received.Invoke(this, rabbitMQMessage);
         };
         connection.GetChannel().BasicConsume(queue: _queueName,
             autoAck: false,
